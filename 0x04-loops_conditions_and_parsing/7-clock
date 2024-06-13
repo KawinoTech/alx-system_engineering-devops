@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#The shell script prints 12hrs of a day
+h=0
+m=1
+
+while [ "$h" -le "12" ]
+do
+        echo "Hour: $h"
+        while [ "$m" -le "59" ]
+        do
+                echo $m
+                m=`expr $m + 1`
+        done
+        m=1
+        h=`expr $h + 1`
+done
