@@ -1,19 +1,46 @@
-#!/usr/bin/env bash
-# transfers a file from to a server.
+#!/bin/bash
 
-if [ $# -lt 3 ]; then
-    echo "Usage: $0 PATH_TO_FILE IP USERNAME [PATH_TO_SSH_KEY]"
+# Script to transfer a file using SCP to a server
+# Requirements:
+# 1. Transfers file to server
+# 2. Accepts 4 parameters (file path, server IP, username, SSH key path)
+# 3. Displays usage message when less than 4 parameters are passed
+# 4. Transfers file to the user's home directory (~)
+# 5. Disables strict host key checking
+
+# Check for required number of arguments
+if [ "$#" -ne 4 ]; then
+    echo "Usage: 0-transfer_file PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
     exit 1
 fi
 
-file_path=$1
-server_ip=$2
-username=$3
-ssh_key=$4
+# Assigning arguments to variables
+FILE_PATH="$1"
+SERVER_IP="$2"
+USERNAME="$3"
+SSH_KEY_PATH="$4"
 
-if [ -z "$ssh_key" ]; then
-    # If no SSH key path provided, assume the default location
-    ssh_key="$HOME/.ssh/id_rsa"
+# Verify that the file exists
+if [ ! -f "$FILE_PATH" ]; then
+    echo "Error: File '$FILE_PATH' does not exist."
+    exit 1
 fi
 
-scp -o StrictHostKeyChecking=no -i "$ssh_key" "$file_path" "$username@$server_ip:~/"
+# Verify that the SSH key exists
+if [ ! -f "$SSH_KEY_PATH" ]; then
+    echo "Error: SSH private key '$SSH_KEY_PATH' does not exist."
+    exit 1
+fi
+
+# SCP command to transfer the file
+echo "Transferring file '$FILE_PATH' to '$USERNAME@$SERVER_IP' home directory..."
+
+scp -o StrictHostKeyChecking=no -i "$SSH_KEY_PATH" "$FILE_PATH" "$USERNAME@$SERVER_IP:~/"
+
+# Check if scp was successful
+if [ $? -eq 0 ]; then
+    echo "File successfully transferred to '$USERNAME@$SERVER_IP:~/'."
+else
+    echo "Error: File transfer failed."
+    exit 1
+fi
