@@ -32,15 +32,10 @@ if [ ! -f "$SSH_KEY_PATH" ]; then
     exit 1
 fi
 
-# SCP command to transfer the file
-echo "Transferring file '$FILE_PATH' to '$USERNAME@$SERVER_IP' home directory..."
-
-scp -o StrictHostKeyChecking=no -i "$SSH_KEY_PATH" "$FILE_PATH" "$USERNAME@$SERVER_IP:~/"
-
-# Check if scp was successful
-if [ $? -eq 0 ]; then
+if scp -o StrictHostKeyChecking=no -i "$SSH_KEY_PATH" "$FILE_PATH" "$USERNAME@$SERVER_IP:~/"; then
     echo "File successfully transferred to '$USERNAME@$SERVER_IP:~/'."
 else
     echo "Error: File transfer failed."
     exit 1
 fi
+
