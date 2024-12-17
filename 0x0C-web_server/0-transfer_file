@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-
 # Script to transfer a file using SCP to a server
+
 # Requirements:
 # 1. Transfers file to server
 # 2. Accepts 4 parameters (file path, server IP, username, SSH key path)
@@ -38,4 +38,3 @@ else
     echo "Error: File transfer failed."
     exit 1
 fi
-
